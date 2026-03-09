@@ -8,15 +8,13 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import numpy as np
 
-# -------------------------
-# DEVICE
-# -------------------------
+# Device Setup
+
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 print(f"Using device: {device}")
 
-# -------------------------
-# LOAD MODEL
-# -------------------------
+# Load model
+
 model_path = "models/sentiment_model"
 
 print("Loading model...")
@@ -26,9 +24,8 @@ model.to(device)
 model.eval()
 print("Model loaded successfully.")
 
-# -------------------------
-# LOAD TEST DATA
-# -------------------------
+# Load Test Data
+
 _, test_texts, _, test_labels = load_and_prepare_data()
 test_texts = test_texts[:5000]
 test_labels = test_labels[:5000]
@@ -57,7 +54,7 @@ class ReviewDataset(torch.utils.data.Dataset):
 
 test_dataset = ReviewDataset(test_encodings, test_labels)
 
-# 🔥 Bigger batch size for faster evaluation
+
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 print("Number of batches:", len(test_loader))
@@ -68,9 +65,9 @@ print("Starting evaluation...")
 all_preds = []
 all_labels = []
 
-# -------------------------
-# EVALUATION LOOP
-# -------------------------
+
+# Evaluation Loop
+
 with torch.no_grad():
     for batch in tqdm(test_loader):
 
@@ -89,9 +86,9 @@ with torch.no_grad():
         all_preds.extend(preds.cpu().numpy())
         all_labels.extend(labels.cpu().numpy())
 
-# -------------------------
-# METRICS
-# -------------------------
+
+# Metrics
+
 accuracy = accuracy_score(all_labels, all_preds)
 
 print("\n==========================")
@@ -101,9 +98,9 @@ print("==========================\n")
 print("Classification Report:")
 print(classification_report(all_labels, all_preds))
 
-# -------------------------
-# CONFUSION MATRIX
-# -------------------------
+
+# Confusion Matrix
+
 cm = confusion_matrix(all_labels, all_preds)
 
 labels_map = [

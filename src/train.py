@@ -6,14 +6,12 @@ from torch.utils.data import DataLoader
 from torch.nn import CrossEntropyLoss
 from tqdm import tqdm
 
-# ======================
-# 1️⃣ Load Data
-# ======================
+# Load Data
 
 print("Loading data...")
 train_texts, test_texts, train_labels, test_labels = load_and_prepare_data()
 
-# Reduce size for development
+# Reduced Size
 train_texts = train_texts[:20000]
 train_labels = train_labels[:20000]
 
@@ -22,9 +20,7 @@ test_labels = test_labels[:5000]
 
 print("Data ready.")
 
-# ======================
-# 2️⃣ Tokenization
-# ======================
+# Tokenization
 
 tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
@@ -50,9 +46,7 @@ test_dataset = ReviewDataset(test_encodings, test_labels)
 train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=16)
 
-# ======================
-# 3️⃣ Device Setup
-# ======================
+# Device Setup
 
 if torch.backends.mps.is_available():
     device = torch.device("mps")
@@ -63,9 +57,7 @@ else:
 
 print("Using device:", device)
 
-# ======================
-# 4️⃣ Load Model
-# ======================
+# Load Model
 
 model = BertForSequenceClassification.from_pretrained(
     "bert-base-uncased",
@@ -74,15 +66,11 @@ model = BertForSequenceClassification.from_pretrained(
 
 model.to(device)
 
-# ======================
-# 5️⃣ Optimizer
-# ======================
+# Optimizer
 
 optimizer = AdamW(model.parameters(), lr=5e-5)
 
-# ======================
-# 6️⃣ Training Loop
-# ======================
+# Traning Loop
 
 epochs = 2
 
@@ -116,9 +104,7 @@ for epoch in range(epochs):
 
 print("Training complete.")
 
-# ======================
-# 7️⃣ Save Model
-# ======================
+# Model Save
 
 model.save_pretrained("models/sentiment_model")
 tokenizer.save_pretrained("models/sentiment_model")

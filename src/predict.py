@@ -43,7 +43,7 @@ def predict_review(review_text):
     return labels_map[predicted_class], probs.cpu().numpy()[0]
 
 
-# ===== Test Custom Reviews Here =====
+# Testing custom Reviews
 
 if __name__ == "__main__":
     while True:

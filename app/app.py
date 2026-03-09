@@ -4,9 +4,7 @@ import pandas as pd
 from transformers import BertForSequenceClassification, BertTokenizer
 import matplotlib.pyplot as plt
 
-# ---------------------------
-# Page Config
-# ---------------------------
+
 st.set_page_config(
     page_title="Amazon Review Sentiment Analyzer",
     layout="centered"
@@ -15,14 +13,10 @@ st.set_page_config(
 st.title("🛍 Amazon Review Sentiment Analysis")
 st.markdown("### Transformer-based Sentiment Classification using BERT")
 
-# ---------------------------
-# Device Setup
-# ---------------------------
+
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
-# ---------------------------
-# Load Model (Cached)
-# ---------------------------
+
 @st.cache_resource
 def load_model():
     model_path = "models/sentiment_model"
@@ -42,9 +36,7 @@ labels_map = {
     4: "Very Positive"
 }
 
-# ---------------------------
-# Prediction Function
-# ---------------------------
+
 def predict_review(text):
     encoding = tokenizer(
         text,
@@ -66,9 +58,7 @@ def predict_review(text):
     return labels_map[predicted_class], probs.cpu().numpy()[0]
 
 
-# ==================================================
-# 🔍 Single Review Prediction
-# ==================================================
+
 
 st.header("🔍 Analyze Single Review")
 
@@ -78,7 +68,7 @@ if st.button("Predict Sentiment"):
     if user_input.strip() != "":
         sentiment, confidence = predict_review(user_input)
 
-        # Colored Result Box
+        
         if sentiment == "Positive":
             st.success(f"Predicted Sentiment: {sentiment}")
         elif sentiment == "Negative":
@@ -86,7 +76,7 @@ if st.button("Predict Sentiment"):
         else:
             st.warning(f"Predicted Sentiment: {sentiment}")
 
-        # Confidence Chart
+        
         st.subheader("📊 Confidence Scores")
 
         confidence_df = pd.DataFrame({
@@ -106,9 +96,7 @@ if st.button("Predict Sentiment"):
         st.warning("Please enter a review.")
 
 
-# ==================================================
-# 📂 Batch Prediction
-# ==================================================
+
 
 st.header("📂 Batch Prediction (CSV Upload)")
 
@@ -130,9 +118,7 @@ if uploaded_file:
         st.subheader("🔎 Preview")
         st.dataframe(df.head())
 
-        # ---------------------------
-        # Sentiment Distribution
-        # ---------------------------
+        
         sentiment_counts = df["Predicted_Sentiment"].value_counts()
 
         st.subheader("📊 Sentiment Distribution (Bar Chart)")
@@ -142,9 +128,7 @@ if uploaded_file:
 
         st.bar_chart(chart_df.set_index("Sentiment"))
 
-        # ---------------------------
-        # Pie Chart
-        # ---------------------------
+        
         st.subheader("🥧 Sentiment Share (Pie Chart)")
 
         fig, ax = plt.subplots()
@@ -153,7 +137,7 @@ if uploaded_file:
             labels=sentiment_counts.index,
             autopct="%1.1f%%"
         )
-        ax.axis("equal")  # Keep it circular
+        ax.axis("equal")  
 
         st.pyplot(fig)
 
