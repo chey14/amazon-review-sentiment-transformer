@@ -5,4 +5,4 @@ pandas
 scikit-learn
 matplotlib
 tqdm
-gdown==5.2.0
+gdown
