@@ -99,6 +99,33 @@ print("Classification Report:")
 print(classification_report(all_labels, all_preds))
 
 
+import numpy as np
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
+import matplotlib.pyplot as plt
+
+# Convert labels to binary format
+y_true = label_binarize(all_labels, classes=[0,1,2,3,4])
+y_pred = label_binarize(all_preds, classes=[0,1,2,3,4])
+
+n_classes = y_true.shape[1]
+
+plt.figure()
+
+for i in range(n_classes):
+    fpr, tpr, _ = roc_curve(y_true[:, i], y_pred[:, i])
+    roc_auc = auc(fpr, tpr)
+
+    plt.plot(fpr, tpr, label=f"Class {i} (AUC = {roc_auc:.2f})")
+
+plt.plot([0,1],[0,1],'k--')
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("ROC Curve")
+plt.legend()
+plt.show()
+
+
 
 
 # Confusion Matrix
